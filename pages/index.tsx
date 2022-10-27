@@ -5,12 +5,18 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import Image from "next/image";
 
 //Custom hook
 import useFetch from "../hook/useFetch";
 
-const Home: NextPage<{ data: any }> = ({ data }) => {
+//Utility
+import Spinner from "../utility/Spinner";
+import Card from "../utility/Card";
+
+//types
+import { myData, makeListObj, makeObj, FormEvent } from "../types";
+
+const Home: NextPage<{ data: myData }> = ({ data }) => {
   const [selectedMake, setSelectedMake] = useState("");
   const [warning, setWarning] = useState("");
   const [url, setUrl] = useState("");
@@ -20,7 +26,7 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setWarning("");
     setLoading(true);
@@ -66,10 +72,12 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
             </h1>
           </div>
         )}
+
         <form className="block" onSubmit={handleSubmit}>
           <label className="text-4xl font-extrabold" htmlFor="makes">
             Makes
           </label>
+
           <div className="flex justify-between mt-5 flex-col md:flex-row">
             <div className="md:w-2/3 mt-2">
               <select
@@ -81,17 +89,18 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
                 <option value="Select a make" selected disabled>
                   Select a make
                 </option>
-                {data.Results?.map((Make: any) => (
+                {data.Results?.map((make: makeListObj) => (
                   <option
-                    value={Make.Make_Name}
-                    key={Make.Make_ID}
+                    value={make.Make_Name}
+                    key={make.Make_ID}
                     className="w-full text-sm"
                   >
-                    {Make.Make_Name}
+                    {make.Make_Name}
                   </option>
                 ))}
               </select>
             </div>
+
             <div>
               <button className="bg-blue-700 text-white px-4 py-2 w-full mt-2 rounded-full baseline hover:bg-blue-400">
                 Fetch Models
@@ -102,15 +111,7 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
       </div>
 
       {loading && makes?.length === 0 ? (
-        <div className="container flex mx-auto mt-7 justify-center">
-          <Image
-            src="/spinner.gif"
-            alt="Picture of the author"
-            width={200}
-            height={200}
-            className="items-center"
-          />
-        </div>
+        <Spinner />
       ) : !loading && error === "" && url !== "" && makes.length === 0 ? (
         <div className="container p-4 mx-auto mt-7">
           <h1 className="text-2xl font-bold">No Result Found</h1>
@@ -121,13 +122,13 @@ const Home: NextPage<{ data: any }> = ({ data }) => {
             <h1 className="text-2xl font-extrabold">
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>
-            {makes?.map((make: any) => (
+            {makes?.map((make: makeObj) => (
               <div key={make.Make_ID} className="container mx-auto mt-5">
-                <div className="flex  flex-col border-2 border-black rounded-lg p-4  justify-between md:justify-around md:flex-row">
-                  <h1 className="text-xl md:text-lg">ID: {make.Make_ID}</h1>
-                  <h1 className="text-xl md:text-lg">Make: {make.Make_Name}</h1>
-                  <h1 className="text-xl md:text-lg">Model: {make.Model_ID}</h1>
-                </div>
+                <Card
+                  Make_ID={make.Make_ID}
+                  Model_Name={make.Model_Name}
+                  Model_ID={make.Model_ID}
+                />
               </div>
             ))}
           </div>

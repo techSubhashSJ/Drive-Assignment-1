@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
+import { makesArray } from "../types/fetch";
 
 const useFetch = (url: string, loadAgain: boolean) => {
   const [loading, setLoading] = useState(false);
-  const [makes, setMakes] = useState<any[]>([]);
+  const [makes, setMakes] = useState<makesArray>([]);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -17,10 +18,9 @@ const useFetch = (url: string, loadAgain: boolean) => {
         .then((response) => {
           return response.json();
         })
-        .then((json) => {
-          console.log(json);
+        .then((data) => {
           setLoading(false);
-          setMakes(json.Results);
+          setMakes(data.Results);
         })
         .catch((err) => {
           setLoading(false);
