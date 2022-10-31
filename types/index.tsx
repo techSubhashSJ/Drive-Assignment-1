@@ -16,3 +16,5 @@ export type myData = {
 };
 
 export type FormEvent = React.FormEvent<HTMLFormElement>;
+
+export type stringOrNull = string | null;

@@ -14,12 +14,18 @@ import Spinner from "../utility/Spinner";
 import Card from "../utility/Card";
 
 //types
-import { myData, makeListObj, makeObj, FormEvent } from "../types";
+import {
+  myData,
+  makeListObj,
+  makeObj,
+  FormEvent,
+  stringOrNull,
+} from "../types";
 
 const Home: NextPage<{ data: myData }> = ({ data }) => {
-  const [selectedMake, setSelectedMake] = useState("");
-  const [warning, setWarning] = useState("");
-  const [url, setUrl] = useState("");
+  const [selectedMake, setSelectedMake] = useState<stringOrNull>(null);
+  const [warning, setWarning] = useState<stringOrNull>(null);
+  const [url, setUrl] = useState<stringOrNull>(null);
   const [loadAgain, setLoadAgain] = useState(false);
 
   const { loading, setLoading, makes, error } = useFetch(url, loadAgain);
@@ -28,10 +34,10 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setWarning("");
+    setWarning(null);
     setLoading(true);
 
-    if (selectedMake === "") {
+    if (selectedMake === null) {
       setWarning("Please select a make");
       setLoading(false);
       return;
@@ -63,7 +69,8 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
           <div
             className={
               (error && "my-3 bg-red-300 p-3") ||
-              (warning && "my-3 bg-yellow-100 p-3")
+              (warning && "my-3 bg-yellow-100 p-3") ||
+              ""
             }
           >
             <h1 className="text-lg">
@@ -112,7 +119,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 
       {loading && makes?.length === 0 ? (
         <Spinner />
-      ) : !loading && error === "" && url !== "" && makes.length === 0 ? (
+      ) : !loading && error === null && url !== null && makes.length === 0 ? (
         <div className="container p-4 mx-auto mt-7">
           <h1 className="text-2xl font-bold">No Result Found</h1>
         </div>
@@ -123,7 +130,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>
             {makes?.map((make: makeObj) => (
-              <div key={make.Make_ID} className="container mx-auto mt-5">
+              <div key={make.Model_ID} className="container mx-auto mt-5">
                 <Card
                   Make_ID={make.Make_ID}
                   Model_Name={make.Model_Name}

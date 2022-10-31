@@ -1,16 +1,17 @@
 import { useState, useEffect } from "react";
+import { stringOrNull } from "../types";
 import { makesArray } from "../types/fetch";
 
-const useFetch = (url: string, loadAgain: boolean) => {
+const useFetch = (url: stringOrNull, loadAgain: boolean) => {
   const [loading, setLoading] = useState(false);
   const [makes, setMakes] = useState<makesArray>([]);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<stringOrNull>(null);
 
   useEffect(() => {
     setMakes([]);
-    setError("");
+    setError(null);
 
-    if (url === "") {
+    if (url === null) {
       setLoading(false);
       setMakes([]);
     } else {
