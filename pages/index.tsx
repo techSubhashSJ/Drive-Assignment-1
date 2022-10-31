@@ -10,8 +10,8 @@ import { useRouter } from "next/router";
 import useFetch from "../hook/useFetch";
 
 //Utility
-import Spinner from "../utility/Spinner";
-import Card from "../utility/Card";
+import Spinner from "../components/Spinner";
+import Card from "../components/Card";
 
 //types
 import {
