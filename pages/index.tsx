@@ -64,7 +64,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
         </button>
       </div>
 
-      <div className="container mx-auto p-4  mt-7 ">
+      <div className="container px-12 p-4  mt-7 max-w-full lg:px-28 xl:max-w-7xl xl:mx-auto">
         {(error || warning) && (
           <div
             className={
@@ -120,17 +120,17 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
       {loading && makes?.length === 0 ? (
         <Spinner />
       ) : !loading && error === null && url !== null && makes.length === 0 ? (
-        <div className="container p-4 mx-auto mt-7">
+        <div className="container p-4 px-12 mt-7 max-w-full lg:px-28 xl:max-w-7xl xl:mx-auto">
           <h1 className="text-2xl font-bold">No Result Found</h1>
         </div>
       ) : (
         <>
-          <div className="container mx-auto p-4  mt-7">
+          <div className="container px-12 p-4  mt-7 max-w-full lg:px-28 xl:max-w-7xl xl:mx-auto">
             <h1 className="text-2xl font-extrabold">
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>
             {makes?.map((make: makeObj) => (
-              <div key={make.Model_ID} className="container mx-auto mt-5">
+              <div key={make.Model_ID} className="container mt-5 max-w-full">
                 <Card
                   Make_ID={make.Make_ID}
                   Model_Name={make.Model_Name}
