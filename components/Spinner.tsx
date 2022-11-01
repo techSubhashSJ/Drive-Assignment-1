@@ -1,3 +1,8 @@
+/**
+ * @Author Subhash Jadhav
+ * @Description This is a spinner component
+ */
+
 import Image from "next/image";
 
 const Spinner = () => {

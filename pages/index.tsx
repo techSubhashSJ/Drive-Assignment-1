@@ -1,3 +1,9 @@
+/**
+ * @author Subhash Jadhav
+ * @description This component is used to display a refresh button, drop down list of makes, fetch models and result of fetch model action
+ * @params {object} data: list of makes
+ */
+
 // React import
 import { useState } from "react";
 
@@ -55,7 +61,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 
   return (
     <>
-      <div className="container px-16 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto">
+      <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
         <button
           className="bg-blue-700 text-white px-4 py-2 rounded-full baseline hover:bg-blue-400"
           onClick={() => router.reload()}
@@ -64,7 +70,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
         </button>
       </div>
 
-      <div className="container px-16 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto">
+      <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
         {(error || warning) && (
           <div
             className={
@@ -120,12 +126,12 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
       {loading && makes?.length === 0 ? (
         <Spinner />
       ) : !loading && error === null && url !== null && makes.length === 0 ? (
-        <div className="container p-4 px-16 mt-7 max-w-full xl:max-w-7xl xl:mx-auto">
+        <div className="container p-4 px-12 mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
           <h1 className="text-2xl font-bold">No Result Found</h1>
         </div>
       ) : (
         <>
-          <div className="container px-16 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto">
+          <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
             <h1 className="text-2xl font-extrabold">
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>

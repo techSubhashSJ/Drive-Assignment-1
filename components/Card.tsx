@@ -1,3 +1,9 @@
+/**
+ * @Author Subhash Jadhav
+ * @Description This is a card component used to display models information
+ * @Param {object} props => { Make_ID, Model_Name, Model_ID }
+ */
+
 import { cardProps } from "../types/card";
 
 const Card = (props: cardProps) => {
