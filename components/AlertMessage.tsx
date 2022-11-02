@@ -1,4 +1,10 @@
-import React from "react";
+/**
+ * @Author Subhash Jadhav
+ * @Description This component renders error or warning messages
+ * @param {string or null} error => contains error message string or null
+ * @param {string or null} warning => contains warning message string or null
+ */
+
 import { stringOrNull } from "../types";
 
 const AlertMessage = (props: { error: stringOrNull; warning: stringOrNull }) => {
