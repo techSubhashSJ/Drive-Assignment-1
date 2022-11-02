@@ -96,10 +96,11 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
               <select
                 name="makes"
                 id="makes"
+                defaultValue="Select a make"
                 onChange={(e) => setSelectedMake(e.target.value)}
                 className="w-full border-black border-2 rounded h-full  p-2"
               >
-                <option value="Select a make" selected disabled>
+                <option value="Select a make" disabled>
                   Select a make
                 </option>
                 {data.Results?.map((make: makeListObj) => (
