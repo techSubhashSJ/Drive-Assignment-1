@@ -4,22 +4,20 @@
  * @params {object} data: list of makes
  */
 
-// React import
 import { useState } from "react";
 
-//Next imports
+import axios from "axios";
+
 import type { NextPage } from "next";
 import { GetServerSideProps } from "next";
-import { useRouter } from "next/router";
 
-//Custom hook
 import useFetch from "../hook/useFetch";
 
-//Utility
 import Spinner from "../components/Spinner";
 import Card from "../components/Card";
+import AlertMessage from "../components/AlertMessage";
+import Button from "../components/Button";
 
-//types
 import {
   myData,
   makeListObj,
@@ -27,6 +25,7 @@ import {
   FormEvent,
   stringOrNull,
 } from "../types";
+import { useRouter } from "next/router";
 
 const Home: NextPage<{ data: myData }> = ({ data }) => {
   const [selectedMake, setSelectedMake] = useState<stringOrNull>(null);
@@ -38,8 +37,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 
   const router = useRouter();
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     setWarning(null);
     setLoading(true);
 
@@ -62,40 +60,25 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
   return (
     <>
       <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
-        <button
-          className="bg-blue-700 text-white px-4 py-2 rounded-full baseline hover:bg-blue-400"
-          onClick={() => router.reload()}
-        >
-          Refresh
-        </button>
+        <Button
+          classes="bg-blue-700 text-white px-4 py-2 rounded-full baseline hover:bg-blue-400"
+          label="Refresh"
+          onclick={() => router.reload()}
+        />
       </div>
 
       <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
-        {(error || warning) && (
-          <div
-            className={
-              (error && "my-3 bg-red-300 p-3") ||
-              (warning && "my-3 bg-yellow-100 p-3") ||
-              ""
-            }
-          >
-            <h1 className="text-lg">
-              {error}
-              {warning}
-            </h1>
-          </div>
-        )}
+        {(error || warning) && <AlertMessage error={error} warning={warning} />}
 
-        <form className="block" onSubmit={handleSubmit}>
-          <label className="text-4xl font-extrabold" htmlFor="makes">
-            Makes
-          </label>
+        <div className="block">
+          <h1 className="text-4xl font-extrabold">Makes</h1>
 
           <div className="flex justify-between mt-5 flex-col md:flex-row">
             <div className="md:w-2/3 mt-2">
               <select
                 name="makes"
                 id="makes"
+                data-testid="select"
                 defaultValue="Select a make"
                 onChange={(e) => setSelectedMake(e.target.value)}
                 className="w-full border-black border-2 rounded h-full  p-2"
@@ -107,6 +90,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
                   <option
                     value={make.Make_Name}
                     key={make.Make_ID}
+                    data-testid="select-option"
                     className="w-full text-sm"
                   >
                     {make.Make_Name}
@@ -116,12 +100,14 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
             </div>
 
             <div>
-              <button className="bg-blue-700 text-white px-4 py-2 w-full mt-2 rounded-full baseline hover:bg-blue-400">
-                Fetch Models
-              </button>
+              <Button
+                classes="bg-blue-700 text-white px-4 py-2 w-full mt-2 rounded-full baseline hover:bg-blue-400"
+                label="Fetch Models"
+                onclick={handleSubmit}
+              />
             </div>
           </div>
-        </form>
+        </div>
       </div>
 
       {loading && makes?.length === 0 ? (
@@ -137,7 +123,11 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>
             {makes?.map((make: makeObj) => (
-              <div key={make.Model_ID} className="container mt-5 max-w-full">
+              <div
+                key={make.Model_ID}
+                className="container mt-5 max-w-full"
+                title="card"
+              >
                 <Card
                   Make_ID={make.Make_ID}
                   Model_Name={make.Model_Name}
@@ -155,14 +145,13 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 export default Home;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch(
+  const res = await axios.get(
     "https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json"
   );
-  const data = await res.json();
 
   return {
     props: {
-      data,
+      data: res.data,
     },
   };
 };
