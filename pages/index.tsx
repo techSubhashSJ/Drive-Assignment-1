@@ -59,7 +59,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
 
   return (
     <>
-      <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
+      <div className="mt-10 mx-[10%]">
         <Button
           classes="bg-blue-700 text-white px-4 py-2 rounded-full baseline hover:bg-blue-400"
           label="Refresh"
@@ -67,7 +67,7 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
         />
       </div>
 
-      <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
+      <div className="mt-14 mx-[10%]">
         {(error || warning) && <AlertMessage error={error} warning={warning} />}
 
         <div className="block">
@@ -113,12 +113,12 @@ const Home: NextPage<{ data: myData }> = ({ data }) => {
       {loading && makes?.length === 0 ? (
         <Spinner />
       ) : !loading && error === null && url !== null && makes.length === 0 ? (
-        <div className="container p-4 px-12 mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
+        <div className="mt-14 mx-[10%]">
           <h1 className="text-2xl font-bold">No Result Found</h1>
         </div>
       ) : (
         <>
-          <div className="container px-12 p-4  mt-7 max-w-full xl:max-w-7xl xl:mx-auto md:px-16">
+          <div className="mt-14 mx-[10%]">
             <h1 className="text-2xl font-extrabold">
               {makes[0] ? `${makes[0]?.Make_Name} Models: ` : ""}
             </h1>
