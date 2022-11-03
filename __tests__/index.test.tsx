@@ -1,4 +1,4 @@
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Home from "../pages/index";
 import "@testing-library/jest-dom";
@@ -6,56 +6,52 @@ const axios = require("axios");
 
 jest.mock("axios");
 
+const data = {
+  count: 10450,
+  Message: "Response returned successfully",
+  Results: [
+    { Make_ID: 1, Make_Name: " BMW" },
+    { Make_ID: 2, Make_Name: "Scoda" },
+  ],
+  SearchCriteria: null,
+};
+
 describe("Home", () => {
-  //Test case 1
-  it("Home should recieve non-empty data object", async () => {
-    axios.get.mockResolvedValue({
-      data: {
-        Count: 10450,
-        Message: "Response returned successfully",
-        Results: [
-          { Make_ID: 1, Make_Name: " BMW" },
-          { Make_ID: 2, Make_Name: "Scoda" },
-        ],
-        SearchCriteria: null,
-      },
+  it("Should render models for the selected make", async () => {
+    render(<Home data={data} />);
+
+    //to select a particular option
+    const user = userEvent.setup();
+
+    const select: HTMLElement = screen.getByTestId("select");
+    const option: HTMLOptionElement = screen.getByRole("option", {
+      name: "BMW",
     });
-    const res = await axios.get(
-      "https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json"
+
+    const option2: HTMLOptionElement = screen.getByRole("option", {
+      name: "Scoda",
+    });
+
+    const fetchModelsButton = screen.getByRole("button", {
+      name: /Fetch Models/i,
+    });
+
+    // select BMW option
+    await user.selectOptions(select, option);
+    expect(option.selected).toBeTruthy();
+    expect(option2.selected).toBeFalsy();
+
+    axios.get.mockResolvedValue({ data: data });
+
+    // Click fetch models button
+    user.click(fetchModelsButton);
+
+    // Call API
+    const result = await axios.get(
+      "https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsdormake/bmw?format=json"
     );
 
-    expect(res.data).toEqual({
-      Count: 10450,
-      Message: "Response returned successfully",
-      Results: [
-        { Make_ID: 1, Make_Name: " BMW" },
-        { Make_ID: 2, Make_Name: "Scoda" },
-      ],
-      SearchCriteria: null,
-    });
-  });
-
-  //Test case 2
-  it("Render a make list in dropdown list", async () => {
-    axios.get.mockResolvedValue({
-      data: {
-        Count: 10450,
-        Message: "Response returned successfully",
-        Results: [
-          { Make_ID: 1, Make_Name: " BMW" },
-          { Make_ID: 2, Make_Name: "Scoda" },
-        ],
-        SearchCriteria: null,
-      },
-    });
-    const res = await axios.get(
-      "https://vpic.nhtsa.dot.gov/api/vehicles/getallmakes?format=json"
-    );
-
-    render(<Home data={res.data} />);
-
-    userEvent.click(screen.getByTestId("select"));
-
-    expect(screen.getAllByTestId("select-option")).toBeTruthy;
+    expect(axios.get).toHaveBeenCalled();
+    expect(result.data).toBe(data);
   });
 });
